@@ -3,6 +3,7 @@ package com.carlos.tomatoclock;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 
 
+@SuppressLint("HandlerLeak")
 public class MainActivity extends Activity {
 	Vibrator vibrator;
 	long[] pattern = { 800, 5000, 400, 30 }; // OFF/ON/OFF/ON...
@@ -49,7 +51,7 @@ public class MainActivity extends Activity {
 					if(tomatoCount < 0)
 					{
 						status = 2;
-						vibrator.vibrate(3000);
+						vibrator.vibrate(pattern, 0);
 					}
 					updateData(getString(R.string.tomato).toString(),tomatoCount);
 					break;
@@ -61,7 +63,7 @@ public class MainActivity extends Activity {
 					if(tomatoCount < 0)
 					{
 						status = 0;
-						vibrator.vibrate(3000);
+						vibrator.vibrate(pattern, 0);
 					}
 					updateData(getString(R.string.rest).toString(),tomatoCount);
 					break;
@@ -94,6 +96,7 @@ public class MainActivity extends Activity {
 			}
 		}, 0, 1000);
 		
+		
 		btnTomato = (Button) findViewById(R.id.btnTomato);
 
 		btnTomato.setText(getString(R.string.tomato).toString()+getString(R.string.stop).toString());
@@ -106,6 +109,7 @@ public class MainActivity extends Activity {
 	private OnClickListener clickHandler= new OnClickListener() {
 	    public void onClick(View v) {
 			Log.v(TAGS, "someone click the button");
+			vibrator.cancel();
 			status = status + 1;
 			if(status > 3)
 				status = 0;
@@ -140,10 +144,13 @@ public class MainActivity extends Activity {
 	 */
 	@Override
 	protected void onPause() {
+    	Log.v(TAGS, "onPause");
+
 //		vibrator.cancel();
 		super.onPause();
-		timer.cancel();
-		finish();
+//		timer.cancel();
+//		vibrator.cancel();
+//		finish();
 	}
 	private void updateData(String tags,int count){
 		data.setText(tags+":"+count);
