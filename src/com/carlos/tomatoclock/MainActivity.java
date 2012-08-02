@@ -113,12 +113,12 @@ public class MainActivity extends Activity {
 			case 0:
 				break;
 			case 1:
-				tomatoCount = 10;//25*60;
+				tomatoCount = 25*60;
 				break;
 			case 2:
 				break;
 			case 3:
-				tomatoCount = 10;//5*60;
+				tomatoCount = 5*60;
 				break;
 			default:
 				break;
