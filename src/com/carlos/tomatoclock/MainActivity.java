@@ -142,6 +142,8 @@ public class MainActivity extends Activity {
 	protected void onPause() {
 //		vibrator.cancel();
 		super.onPause();
+		timer.cancel();
+		finish();
 	}
 	private void updateData(String tags,int count){
 		data.setText(tags+":"+count);
