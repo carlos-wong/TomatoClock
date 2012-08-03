@@ -4,6 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -89,15 +90,15 @@ public class MainActivity extends Activity {
 
     	
 		timer = new Timer();
-		timer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				Message message = new Message();
-				message.what = 0;
-				handler.sendMessage(message);
-			}
-		}, 0, 1000);
+//		timer.scheduleAtFixedRate(new TimerTask() {
+//			@Override
+//			public void run() {
+//				// TODO Auto-generated method stub
+//				Message message = new Message();
+//				message.what = 0;
+//				handler.sendMessage(message);
+//			}
+//		}, 0, 1000);
 		
 		
 		btnTomato = (Button) findViewById(R.id.btnTomato);
@@ -108,6 +109,9 @@ public class MainActivity extends Activity {
 		
 		data = (TextView)findViewById(R.id.text);
 		data.setText(getString(R.string.current_status).toString()+getString(R.string.tomato).toString());
+		
+		startService(new Intent(this, ClockServer.class));
+
 	}
 	private OnClickListener clickHandler= new OnClickListener() {
 	    public void onClick(View v) {
@@ -125,7 +129,7 @@ public class MainActivity extends Activity {
 			case 2:
 				break;
 			case 3:
-				tomatoCount = 10;
+				tomatoCount = 5*60;
 				break;
 			default:
 				break;
@@ -148,6 +152,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onPause() {
     	Log.v(TAGS, "onPause");
+		stopService(new Intent(this, ClockServer.class));
 
 //		vibrator.cancel();
 		super.onPause();
