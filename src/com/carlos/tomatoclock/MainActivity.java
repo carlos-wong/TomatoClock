@@ -110,7 +110,16 @@ public class MainActivity extends Activity {
 		data = (TextView)findViewById(R.id.text);
 		data.setText(getString(R.string.current_status).toString()+getString(R.string.tomato).toString());
 		
-		startService(new Intent(this, ClockServer.class));
+		Intent intent = new Intent();
+		intent.putExtra("count", 30);
+		intent.setClass(this, ClockServer.class);
+//		//通过Bundle来获取数据,通过key-Value的方式放入数据
+//		Bundle bl = new Bundle();
+//		bl.putString("gategory", Gategory.this.mCategoryArrayList.get(arg2).getName());
+//		//将Bundle放入Intent传入下一个Activity
+//		intent.putExtras(bl);
+		
+		startService(intent);
 
 	}
 	private OnClickListener clickHandler= new OnClickListener() {
@@ -152,7 +161,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onPause() {
     	Log.v(TAGS, "onPause");
-		stopService(new Intent(this, ClockServer.class));
+//		stopService(new Intent(this, ClockServer.class));
 
 //		vibrator.cancel();
 		super.onPause();
