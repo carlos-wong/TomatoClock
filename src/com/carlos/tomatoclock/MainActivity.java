@@ -3,7 +3,6 @@ package com.carlos.tomatoclock;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,8 +18,8 @@ import android.widget.TextView;
 
 
 
-@SuppressLint("HandlerLeak")
 public class MainActivity extends Activity {
+
 	Vibrator vibrator;
 	long[] pattern = { 800, 5000, 400, 30 }; // OFF/ON/OFF/ON...
 	Timer timer;
@@ -29,7 +28,6 @@ public class MainActivity extends Activity {
 	Button btnRest;
 
 	TextView data;
-	
 	
 	static int status = 0;//tomato stop /1tomato start /2 reststop /3 reststart
 	
@@ -80,11 +78,16 @@ public class MainActivity extends Activity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+    	Log.v(TAGS, "onCreate");
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 //		vibrator.vibrate(pattern, 0);// -1不重复，非-1为从pattern的指定下标开始重复
-		
+    	Log.v(TAGS, "timer is: "+timer);
+    	Log.v(TAGS, "handler is: "+handler);
+
+    	
 		timer = new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
@@ -122,7 +125,7 @@ public class MainActivity extends Activity {
 			case 2:
 				break;
 			case 3:
-				tomatoCount = 5*60;
+				tomatoCount = 10;
 				break;
 			default:
 				break;
@@ -159,9 +162,11 @@ public class MainActivity extends Activity {
 		switch (status) {
 		case 0:
 			btnTomato.setText(getString(R.string.tomato).toString()+getString(R.string.stop).toString());
+			
 			break;
 		case 1:
 			btnTomato.setText(getString(R.string.tomato).toString()+getString(R.string.start).toString());
+			
 			break;
 		case 2:
 			btnTomato.setText(getString(R.string.rest).toString()+getString(R.string.stop).toString());
@@ -182,7 +187,20 @@ public class MainActivity extends Activity {
 	 */
 	@Override
 	protected void onResume() {
+    	Log.v(TAGS, "onResume");
+
 //		vibrator.vibrate(pattern, 0);// -1不重复，非-1为从pattern的指定下标开始重复
 		super.onResume();
+	}
+	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onDestroy()
+	 */
+	@Override
+	protected void onDestroy() {
+    	Log.v(TAGS, "onDestroy");
+
+		// TODO Auto-generated method stub
+		super.onDestroy();
 	}
 }
