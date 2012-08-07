@@ -98,7 +98,7 @@ public class ClockServer extends Service {
 
         m_Notification.setLatestEventInfo(this, "hello", "hello"/* your content */,
 				pendingIntent);
-		notificationManager.notify(1/* id */, m_Notification);
+		notificationManager.notify(0/* id */, m_Notification);
         	
         	
         new Thread( new Runnable() {
