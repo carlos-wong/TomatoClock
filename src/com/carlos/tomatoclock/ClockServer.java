@@ -3,6 +3,9 @@
  */
 package com.carlos.tomatoclock;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +20,12 @@ import android.util.Log;
  */
 public class ClockServer extends Service {
 
-	
+	NotificationManager m_NotificationManager;  
+
+    PendingIntent m_PendingIntent;  
+
+    Intent m_Intent;  
+
     private boolean threadDisable;
     
     final String TAGS = "ClockServer_Service";
@@ -73,6 +81,26 @@ public class ClockServer extends Service {
 //		bl=intent.getExtras();
 //        Log.v( TAGS , " onCreate count is: "+bl.getString("count"));
 
+        
+		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		Notification m_Notification = new Notification(/* your notification */);
+
+		m_Notification.icon = R.drawable.ic_launcher;
+
+		m_Notification.tickerText = "hello通知内容........";
+
+		Intent m_Intent = new Intent(this, MainActivity.class);
+
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+				m_Intent, 0); /* your intent */
+		
+        m_Notification.defaults = Notification.DEFAULT_ALL;  
+
+        m_Notification.setLatestEventInfo(this, "hello", "hello"/* your content */,
+				pendingIntent);
+		notificationManager.notify(1/* id */, m_Notification);
+        	
+        	
         new Thread( new Runnable() {
 
             public void run() {
@@ -83,14 +111,32 @@ public class ClockServer extends Service {
                     }
                     count ++ ;
                     Log.v( TAGS , " Count is " + count);
-//                    if(testCount == count)
-//                    {
-////            			Intent intent = new Intent();
-////            			intent.setClass(ClockServer.this, MainActivity.class);
-////            			startActivity(intent);
+                    if(testCount == count)
+                    {
+//            			Intent intent = new Intent();
+//            			intent.setClass(ClockServer.this, MainActivity.class);
+//            			startActivity(intent);
 //                        threadDisable = true ;
+//                    	m_NotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);  
+//                        
+//                        m_Intent = new Intent(MainActivity.this, MainActivity.class);  
 //
-//                    }
+//                        m_PendingIntent = PendingIntent.getActivity(MainActivity.this, 0,  
+//                                m_Intent, 0); 
+//
+//                        m_Notification = new Notification();
+//                        
+//                        m_Notification.icon = R.drawable.ic_launcher;  
+//
+//                        m_Notification.tickerText = "MainActivity通知内容........";  
+////                         通知时既震动又屏幕发亮还有默认的声音 这里用的是ALL  
+//                        m_Notification.defaults = Notification.DEFAULT_ALL;  
+//                        
+//                        m_Notification.setLatestEventInfo(MainActivity.this, "Button4",  
+//                                "Button4通知", m_PendingIntent);  
+//                        m_NotificationManager.notify(0, m_Notification);  
+
+                    }
                 }
             }
         }).start();
