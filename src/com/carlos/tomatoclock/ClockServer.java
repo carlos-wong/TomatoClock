@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.Vibrator;
 import android.util.Log;
 
 /**
@@ -35,6 +36,10 @@ public class ClockServer extends Service {
     private int count;
     
     final static int SecondTick = 5000;
+    
+	Vibrator vibrator;
+	long[] pattern = { 800, 5000, 400, 30 }; // OFF/ON/OFF/ON...
+
     
     Handler handler = new Handler() {
 	    @Override
@@ -100,6 +105,10 @@ public class ClockServer extends Service {
 				pendingIntent);
 		notificationManager.notify(0/* id */, m_Notification);
         	
+		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+
+		vibrator.vibrate(pattern, 0);// -1不重复，非-1为从pattern的指定下标开始重复
+
         	
         new Thread( new Runnable() {
 
