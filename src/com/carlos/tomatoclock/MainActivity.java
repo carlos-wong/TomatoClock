@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -103,6 +104,8 @@ public class MainActivity extends Activity {
     	Log.v(TAGS, "onCreate");
 
 		super.onCreate(savedInstanceState);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); 
+
 		setContentView(R.layout.activity_main);
 //		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 //		vibrator.vibrate(pattern, 0);// -1不重复，非-1为从pattern的指定下标开始重复
@@ -178,14 +181,14 @@ public class MainActivity extends Activity {
 				CtrlServer(0,0);
 				break;
 			case 1:
-				tomatoCount = 1*60;
+				tomatoCount = 25*60;
 				CtrlServer(1,tomatoCount);
 				break;
 			case 2:
 				CtrlServer(0,0);
 				break;
 			case 3:
-				tomatoCount = 1*60;
+				tomatoCount = 5*60;
 				CtrlServer(1,tomatoCount);
 				break;
 			default:
@@ -279,7 +282,7 @@ public class MainActivity extends Activity {
 			//处理接收到的内容
 	    	Log.v(TAGS, "MyReceiver i is: "+a);
 	    	updateData(tagName[status],a);
-	    	MainActivity.this.BroadcastToServer(a+100);
+//	    	MainActivity.this.BroadcastToServer(a+100);
 		}
 		public MyReceiver(){
 			//构造函数，做一些初始化工作，本例中无任何作用

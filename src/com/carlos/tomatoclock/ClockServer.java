@@ -72,7 +72,7 @@ public class ClockServer extends Service {
 		Bundle bl;
 		// // //获取Intent中的Bundle数据
 		bl = intent.getExtras();
-		
+		count = bl.getInt("count");
 		Log.v(TAGS, " onStartCommand count is: " + bl.getInt("count"));
 		// Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
 		return super.onStartCommand(intent, flags, startId);
@@ -113,7 +113,7 @@ public class ClockServer extends Service {
 //				pendingIntent);
 //		notificationManager.notify(0/* id */, m_Notification);
         	
-//		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 //
 //		vibrator.vibrate(pattern, 0);// -1不重复，非-1为从pattern的指定下标开始重复
 
@@ -130,8 +130,15 @@ public class ClockServer extends Service {
                         Thread.sleep( SecondTick );
                     } catch (InterruptedException e) {
                     }
-                    count ++ ;
                     Log.v( TAGS , " Count is " + count);
+
+                    if(count == 1)
+                    {
+                		vibrator.vibrate(pattern, 0);
+                    }
+					if (count > 0) {
+						count--;
+					
                     Intent intent=new Intent();
 					intent.putExtra("i", count);
 					intent.setAction("com.carlos.tomatoclock.ClockServer");//action与接收器相同
@@ -143,7 +150,7 @@ public class ClockServer extends Service {
 		            b.putString("color", "我的");
 		            message.setData(b);
 					handler.sendMessage(message);
-                    if(testCount == count)
+                    if(0 == count)
                     {
 //            			Intent intent = new Intent();
 //            			intent.setClass(ClockServer.this, MainActivity.class);
@@ -169,6 +176,7 @@ public class ClockServer extends Service {
 //                        m_NotificationManager.notify(0, m_Notification);  
 
                     }
+					}
                 }
             }
         }).start();
@@ -177,6 +185,7 @@ public class ClockServer extends Service {
     public void onDestroy() {
         this .threadDisable = true ;
         ClockServer.this.unregisterReceiver(receiver);
+        vibrator.cancel();
         Log.v( TAGS , " on destroy " );
         super .onDestroy();
     }
