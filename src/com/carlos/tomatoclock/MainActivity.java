@@ -33,6 +33,9 @@ public class MainActivity extends Activity {
 
 	TextView data;
 	
+	String [] tagName = { "tomato", "tomato", "rest", "rest" }; 
+
+	
 	static int status = 0;//tomato stop /1tomato start /2 reststop /3 reststart
 	
 	static int tomatoCount = 0;
@@ -275,6 +278,7 @@ public class MainActivity extends Activity {
 			int a=bundle.getInt("i");
 			//处理接收到的内容
 	    	Log.v(TAGS, "MyReceiver i is: "+a);
+	    	updateData(tagName[status],a);
 	    	MainActivity.this.BroadcastToServer(a+100);
 		}
 		public MyReceiver(){
