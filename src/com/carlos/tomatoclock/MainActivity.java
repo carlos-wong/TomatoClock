@@ -46,6 +46,9 @@ public class MainActivity extends Activity {
     Intent m_Intent;  
     
 	MyReceiver receiver;
+	
+	IntentFilter filter;
+
 
 
 //	Handler handler = new Handler() {
@@ -97,17 +100,15 @@ public class MainActivity extends Activity {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+//		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 //		vibrator.vibrate(pattern, 0);// -1不重复，非-1为从pattern的指定下标开始重复
     	Log.v(TAGS, "timer is: "+timer);
-//    	Log.v(TAGS, "handler is: "+handler);
 
     	
 		timer = new Timer();
 //		timer.scheduleAtFixedRate(new TimerTask() {
 //			@Override
 //			public void run() {
-//				// TODO Auto-generated method stub
 //				Message message = new Message();
 //				message.what = 0;
 //				handler.sendMessage(message);
@@ -124,59 +125,63 @@ public class MainActivity extends Activity {
 		data = (TextView)findViewById(R.id.text);
 		data.setText(getString(R.string.current_status).toString()+getString(R.string.tomato).toString());
 		
-		Intent intent = new Intent();
-		intent.putExtra("count", 30);
-		intent.setClass(this, ClockServer.class);
+//		Intent intent = new Intent();
+//		intent.putExtra("count", 30);
+//		intent.setClass(this, ClockServer.class);
 //		//通过Bundle来获取数据,通过key-Value的方式放入数据
 //		Bundle bl = new Bundle();
 //		bl.putString("gategory", Gategory.this.mCategoryArrayList.get(arg2).getName());
 //		//将Bundle放入Intent传入下一个Activity
 //		intent.putExtras(bl);
 		
-		startService(intent);
+//		startService(intent);
 		
-        m_NotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);  
-        
-        m_Intent = new Intent(MainActivity.this, MainActivity.class);  
-
-        m_PendingIntent = PendingIntent.getActivity(MainActivity.this, 0,  
-                m_Intent, 0); 
-
-        m_Notification = new Notification();
-        
-        m_Notification.icon = R.drawable.ic_launcher;  
-
-        m_Notification.tickerText = "MainActivity通知内容........";  
-//         通知时既震动又屏幕发亮还有默认的声音 这里用的是ALL  
-        m_Notification.defaults = Notification.DEFAULT_ALL;  
-        
-        m_Notification.setLatestEventInfo(MainActivity.this, "Button4",  
-                "Button4通知", m_PendingIntent);  
-        m_NotificationManager.notify(0, m_Notification); 
+//        m_NotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);  
+//        
+//        m_Intent = new Intent(MainActivity.this, MainActivity.class);  
+//
+//        m_PendingIntent = PendingIntent.getActivity(MainActivity.this, 0,  
+//                m_Intent, 0); 
+//
+//        m_Notification = new Notification();
+//        
+//        m_Notification.icon = R.drawable.ic_launcher;  
+//
+//        m_Notification.tickerText = "MainActivity通知内容........";  
+////         通知时既震动又屏幕发亮还有默认的声音 这里用的是ALL  
+//        m_Notification.defaults = Notification.DEFAULT_ALL;  
+//        
+//        m_Notification.setLatestEventInfo(MainActivity.this, "Button4",  
+//                "Button4通知", m_PendingIntent);  
+//        m_NotificationManager.notify(0, m_Notification); 
         
         receiver=new MyReceiver();
-		IntentFilter filter=new IntentFilter();
+		filter=new IntentFilter();
 		filter.addAction("com.carlos.tomatoclock.ClockServer");
 		this.registerReceiver(receiver,filter);
-		this.BroadcastToServer(0);
+//		this.BroadcastToServer(0);
 	}
 	private OnClickListener clickHandler= new OnClickListener() {
 	    public void onClick(View v) {
-			Log.v(TAGS, "someone click the button");
-			vibrator.cancel();
 			status = status + 1;
 			if(status > 3)
 				status = 0;
+			Log.v(TAGS, "someone click the button i is: "+status);
+
 			switch (status) {
 			case 0:
+				CtrlServer(0,0);
 				break;
 			case 1:
-				tomatoCount = 25*60;
+				tomatoCount = 1*60;
+				CtrlServer(1,tomatoCount);
 				break;
 			case 2:
+				CtrlServer(0,0);
 				break;
 			case 3:
-				tomatoCount = 5*60;
+				tomatoCount = 1*60;
+				CtrlServer(1,tomatoCount);
 				break;
 			default:
 				break;
@@ -280,5 +285,36 @@ public class MainActivity extends Activity {
 		intent.putExtra("status", i);
 		intent.setAction("com.carlos.tomatoclock.MainActivity");//action与接收器相同
 		sendBroadcast(intent);
+	}
+	
+	private void  CtrlServer(int i,int time) {
+		if(i == 0)
+		{
+			//close server
+			MainActivity.this.unregisterReceiver(receiver);
+			stopService(new Intent(this, ClockServer.class));
+		}
+		else if(i == 1)
+		{
+			this.registerReceiver(receiver,filter);
+			//start server
+			Intent intent = new Intent();
+			intent.putExtra("count", time);
+			intent.setClass(MainActivity.this, ClockServer.class);
+			//通过Bundle来获取数据,通过key-Value的方式放入数据
+//			Bundle bl = new Bundle();
+//			bl.putString("gategory", Gategory.this.mCategoryArrayList.get(arg2).getName());
+			//将Bundle放入Intent传入下一个Activity
+//			intent.putExtras(bl);
+			startService(intent);
+		}
+		else if(i == 2)
+		{
+			
+		}
+		else if(i == 3)
+		{
+			
+		}
 	}
 }

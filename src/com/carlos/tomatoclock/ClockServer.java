@@ -40,7 +40,7 @@ public class ClockServer extends Service {
 
     private int count;
     
-    final static int SecondTick = 5000;
+    final static int SecondTick = 1000;
     
 	Vibrator vibrator;
 	long[] pattern = { 800, 5000, 400, 30 }; // OFF/ON/OFF/ON...
@@ -95,23 +95,23 @@ public class ClockServer extends Service {
 //        Log.v( TAGS , " onCreate count is: "+bl.getString("count"));
 
         
-		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		Notification m_Notification = new Notification(/* your notification */);
-
-		m_Notification.icon = R.drawable.ic_launcher;
-
-		m_Notification.tickerText = "hello通知内容........";
-
-		Intent m_Intent = new Intent(this, MainActivity.class);
-
-		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-				m_Intent, 0); /* your intent */
-		
-        m_Notification.defaults = Notification.DEFAULT_ALL;  
-
-        m_Notification.setLatestEventInfo(this, "hello", "hello"/* your content */,
-				pendingIntent);
-		notificationManager.notify(0/* id */, m_Notification);
+//		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//		Notification m_Notification = new Notification(/* your notification */);
+//
+//		m_Notification.icon = R.drawable.ic_launcher;
+//
+//		m_Notification.tickerText = "hello通知内容........";
+//
+//		Intent m_Intent = new Intent(this, MainActivity.class);
+//
+//		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+//				m_Intent, 0); /* your intent */
+//		
+//        m_Notification.defaults = Notification.DEFAULT_ALL;  
+//
+//        m_Notification.setLatestEventInfo(this, "hello", "hello"/* your content */,
+//				pendingIntent);
+//		notificationManager.notify(0/* id */, m_Notification);
         	
 //		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 //
@@ -175,9 +175,10 @@ public class ClockServer extends Service {
     }
 	@Override
     public void onDestroy() {
-        super .onDestroy();
         this .threadDisable = true ;
+        ClockServer.this.unregisterReceiver(receiver);
         Log.v( TAGS , " on destroy " );
+        super .onDestroy();
     }
 
     public int getCount() {
