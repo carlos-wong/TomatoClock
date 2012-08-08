@@ -49,6 +49,7 @@ public class MainActivity extends Activity {
 	
 	IntentFilter filter;
 
+	int reciverRegister = 0;
 
 
 //	Handler handler = new Handler() {
@@ -159,6 +160,7 @@ public class MainActivity extends Activity {
 		filter=new IntentFilter();
 		filter.addAction("com.carlos.tomatoclock.ClockServer");
 		this.registerReceiver(receiver,filter);
+		reciverRegister = 1;
 //		this.BroadcastToServer(0);
 	}
 	private OnClickListener clickHandler= new OnClickListener() {
@@ -205,8 +207,10 @@ public class MainActivity extends Activity {
 	protected void onPause() {
     	Log.v(TAGS, "onPause");
 //		stopService(new Intent(this, ClockServer.class));
-		this.unregisterReceiver(receiver);
-
+    	if (reciverRegister == 1) {
+			reciverRegister = 0;
+			MainActivity.this.unregisterReceiver(receiver);
+		}
 //		vibrator.cancel();
 		super.onPause();
 //		timer.cancel();
@@ -291,12 +295,18 @@ public class MainActivity extends Activity {
 		if(i == 0)
 		{
 			//close server
-			MainActivity.this.unregisterReceiver(receiver);
+			if (reciverRegister == 1) {
+				reciverRegister = 0;
+				MainActivity.this.unregisterReceiver(receiver);
+			}
 			stopService(new Intent(this, ClockServer.class));
 		}
 		else if(i == 1)
 		{
-			this.registerReceiver(receiver,filter);
+			if (reciverRegister == 0) {
+				reciverRegister = 1;
+				this.registerReceiver(receiver, filter);
+			}
 			//start server
 			Intent intent = new Intent();
 			intent.putExtra("count", time);
