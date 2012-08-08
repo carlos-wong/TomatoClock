@@ -1,7 +1,6 @@
 package com.carlos.tomatoclock;
 
 import java.util.Timer;
-import java.util.TimerTask;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -12,8 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;

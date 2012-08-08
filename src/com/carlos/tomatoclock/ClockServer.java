@@ -44,7 +44,8 @@ public class ClockServer extends Service {
     Handler handler = new Handler() {
 	    @Override
 	    public void handleMessage(Message msg) {
-	    	Log.v(TAGS, "get one second message");
+	    	Bundle b = msg.getData();
+	    	Log.v(TAGS, "get one second message is: "+b.getString("color"));
 	        super.handleMessage(msg);
 	    }
 	};
@@ -64,6 +65,7 @@ public class ClockServer extends Service {
 		Bundle bl;
 		// // //获取Intent中的Bundle数据
 		bl = intent.getExtras();
+		
 		Log.v(TAGS, " onStartCommand count is: " + bl.getInt("count"));
 		// Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
 		return super.onStartCommand(intent, flags, startId);
@@ -73,7 +75,6 @@ public class ClockServer extends Service {
 //	    Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
 //	    return super.onStartCommand(intent,flags,startId);
 //	}
-	
 	@Override
     public void onCreate() {
         Log.v( TAGS , " onCreate");
@@ -124,6 +125,13 @@ public class ClockServer extends Service {
 					intent.putExtra("i", count);
 					intent.setAction("com.carlos.tomatoclock.ClockServer");//action与接收器相同
 					sendBroadcast(intent);
+					
+					Message message = new Message();
+					message.what = 0;
+					Bundle b = new Bundle();// 存放数据
+		            b.putString("color", "我的");
+		            message.setData(b);
+					handler.sendMessage(message);
                     if(testCount == count)
                     {
 //            			Intent intent = new Intent();
