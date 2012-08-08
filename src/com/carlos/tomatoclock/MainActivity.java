@@ -158,6 +158,7 @@ public class MainActivity extends Activity {
 		IntentFilter filter=new IntentFilter();
 		filter.addAction("com.carlos.tomatoclock.ClockServer");
 		this.registerReceiver(receiver,filter);
+		this.BroadcastToServer(0);
 	}
 	private OnClickListener clickHandler= new OnClickListener() {
 	    public void onClick(View v) {
@@ -261,17 +262,23 @@ public class MainActivity extends Activity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
-	    	Log.v(TAGS, "OnReceiver");
 			Bundle bundle=intent.getExtras();
 			int a=bundle.getInt("i");
 			//处理接收到的内容
 	    	Log.v(TAGS, "MyReceiver i is: "+a);
-
+	    	MainActivity.this.BroadcastToServer(a+100);
 		}
 		public MyReceiver(){
 			//构造函数，做一些初始化工作，本例中无任何作用
 		}
 		
  
+	}
+	
+	private void BroadcastToServer(int i) {
+		Intent intent=new Intent();
+		intent.putExtra("status", i);
+		intent.setAction("com.carlos.tomatoclock.MainActivity");//action与接收器相同
+		sendBroadcast(intent);
 	}
 }

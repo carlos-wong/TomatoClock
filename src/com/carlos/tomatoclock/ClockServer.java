@@ -3,11 +3,16 @@
  */
 package com.carlos.tomatoclock;
 
+import com.carlos.tomatoclock.MainActivity.MyReceiver;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -39,6 +44,8 @@ public class ClockServer extends Service {
     
 	Vibrator vibrator;
 	long[] pattern = { 800, 5000, 400, 30 }; // OFF/ON/OFF/ON...
+
+	MyReceiver receiver;
 
     
     Handler handler = new Handler() {
@@ -110,6 +117,10 @@ public class ClockServer extends Service {
 //
 //		vibrator.vibrate(pattern, 0);// -1不重复，非-1为从pattern的指定下标开始重复
 
+		receiver=new MyReceiver();
+		IntentFilter filter=new IntentFilter();
+		filter.addAction("com.carlos.tomatoclock.MainActivity");
+		this.registerReceiver(receiver,filter);
         	
         new Thread( new Runnable() {
 
@@ -172,4 +183,22 @@ public class ClockServer extends Service {
     public int getCount() {
         return count;
     }
+    
+    public class MyReceiver extends BroadcastReceiver {
+		//自定义一个广播接收器
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			Bundle bundle=intent.getExtras();
+			int a=bundle.getInt("status");
+			//处理接收到的内容
+	    	Log.v(TAGS, "MyReceiver i is: "+a);
+
+		}
+		public MyReceiver(){
+			//构造函数，做一些初始化工作，本例中无任何作用
+		}
+		
+ 
+	}
 }
