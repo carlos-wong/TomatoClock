@@ -7,7 +7,10 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -44,6 +47,9 @@ public class MainActivity extends Activity {
     PendingIntent m_PendingIntent;  
 
     Intent m_Intent;  
+    
+	MyReceiver receiver;
+
 
 //	Handler handler = new Handler() {
 //	    @Override
@@ -149,8 +155,12 @@ public class MainActivity extends Activity {
         
         m_Notification.setLatestEventInfo(MainActivity.this, "Button4",  
                 "Button4通知", m_PendingIntent);  
-        m_NotificationManager.notify(0, m_Notification);  
-
+        m_NotificationManager.notify(0, m_Notification); 
+        
+        receiver=new MyReceiver();
+		IntentFilter filter=new IntentFilter();
+		filter.addAction("com.carlos.tomatoclock.ClockServer");
+		this.registerReceiver(receiver,filter);
 	}
 	private OnClickListener clickHandler= new OnClickListener() {
 	    public void onClick(View v) {
@@ -192,12 +202,13 @@ public class MainActivity extends Activity {
 	protected void onPause() {
     	Log.v(TAGS, "onPause");
 //		stopService(new Intent(this, ClockServer.class));
+		this.unregisterReceiver(receiver);
 
 //		vibrator.cancel();
 		super.onPause();
 //		timer.cancel();
 //		vibrator.cancel();
-//		finish();
+		finish();
 	}
 	private void updateData(String tags,int count){
 		data.setText(tags+":"+count);
@@ -246,5 +257,24 @@ public class MainActivity extends Activity {
 
 		// TODO Auto-generated method stub
 		super.onDestroy();
+	}
+	
+	public class MyReceiver extends BroadcastReceiver {
+		//自定义一个广播接收器
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+	    	Log.v(TAGS, "OnReceiver");
+			Bundle bundle=intent.getExtras();
+			int a=bundle.getInt("i");
+			//处理接收到的内容
+	    	Log.v(TAGS, "MyReceiver i is: "+a);
+
+		}
+		public MyReceiver(){
+			//构造函数，做一些初始化工作，本例中无任何作用
+		}
+		
+ 
 	}
 }

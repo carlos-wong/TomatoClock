@@ -105,9 +105,9 @@ public class ClockServer extends Service {
 				pendingIntent);
 		notificationManager.notify(0/* id */, m_Notification);
         	
-		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-
-		vibrator.vibrate(pattern, 0);// -1不重复，非-1为从pattern的指定下标开始重复
+//		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+//
+//		vibrator.vibrate(pattern, 0);// -1不重复，非-1为从pattern的指定下标开始重复
 
         	
         new Thread( new Runnable() {
@@ -120,6 +120,10 @@ public class ClockServer extends Service {
                     }
                     count ++ ;
                     Log.v( TAGS , " Count is " + count);
+                    Intent intent=new Intent();
+					intent.putExtra("i", count);
+					intent.setAction("com.carlos.tomatoclock.ClockServer");//action与接收器相同
+					sendBroadcast(intent);
                     if(testCount == count)
                     {
 //            			Intent intent = new Intent();
